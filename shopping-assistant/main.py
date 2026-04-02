@@ -1,5 +1,6 @@
-from graph.workflow import ShoppingAssistantGraph
+from shopping_assistant.graph import ShoppingAssistantGraph
 from langgraph.graph import StateGraph
+
 
 def chatbot_invoke(graph: StateGraph):
     app = graph.compile()
@@ -23,6 +24,9 @@ def chatbot_invoke(graph: StateGraph):
         # mengupdate context dengan history percakapan terbaru
         history.append(f"User: {user_input}")
         history.append(f"Chatbot: {result['messages'][-1].content}")
+
+        if len(history) > 10:
+            history = history[-10:]  # simpan hanya 10 pesan terakhir untuk konteks
 
 def chatbot_stream(graph: StateGraph):
     app = graph.compile()
@@ -52,6 +56,9 @@ def chatbot_stream(graph: StateGraph):
                     # mengupdate context dengan history percakapan terbaru
                     history.append(f"User: {user_input}")
                     history.append(f"Chatbot: {value['messages'][0].content}")
+                    
+                    if len(history) > 10:
+                        history = history[-10:]  # simpan hanya 10 pesan terakhir untuk konteks
 
 if __name__ == "__main__":
     graph = ShoppingAssistantGraph()
