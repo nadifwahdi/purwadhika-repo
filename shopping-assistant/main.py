@@ -1,7 +1,7 @@
 from graph.workflow import ShoppingAssistantGraph
 from langgraph.graph import StateGraph
 
-def chatbot(graph: StateGraph):
+def chatbot_invoke(graph: StateGraph):
     app = graph.compile()
     history = []
 
@@ -20,6 +20,7 @@ def chatbot(graph: StateGraph):
 
         print("Chatbot:", result["messages"][-1].content)
 
+        # mengupdate context dengan history percakapan terbaru
         history.append(f"User: {user_input}")
         history.append(f"Chatbot: {result['messages'][-1].content}")
 
@@ -47,6 +48,8 @@ def chatbot_stream(graph: StateGraph):
                     print(f"🔀 Routing ke agent {next_agent}")
                 else:
                     print(f"🤖 {key}:\n{value['messages'][0].content}")
+
+                    # mengupdate context dengan history percakapan terbaru
                     history.append(f"User: {user_input}")
                     history.append(f"Chatbot: {value['messages'][0].content}")
 
@@ -55,7 +58,7 @@ if __name__ == "__main__":
 
     # Pilih mode chatbot: invoke atau stream
     print("=" * 60)
-    mode = input("Pilih mode chatbot (invoke/stream): ").strip().lower()
+    mode = input("Pilih mode chatbot (invoke/stream) [default invoke]: ").strip().lower()
     print("=" * 60)
 
     print("🛍️  Selamat datang di Toko Pakaian Purwadhika!")
@@ -64,6 +67,6 @@ if __name__ == "__main__":
     if mode == "stream":
         chatbot_stream(graph)
     else:
-        chatbot(graph)
+        chatbot_invoke(graph)
 
 
